@@ -1,7 +1,6 @@
 """Command-line interface for the stock portfolio tracker."""
 
 import sys
-from datetime import datetime
 from typing import Optional, Any
 from stock import Stock
 from transaction import Transaction, TransactionType

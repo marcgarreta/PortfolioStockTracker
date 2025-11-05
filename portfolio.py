@@ -1,7 +1,6 @@
 """Portfolio class to manage holdings and calculations."""
 
 from collections import defaultdict
-from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from transaction import Transaction, TransactionType
 from stock import Stock

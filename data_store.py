@@ -1,7 +1,6 @@
 """Data storage module for persisting portfolio data."""
 
 import json
-import os
 from pathlib import Path
 from typing import Optional
 from portfolio import Portfolio
