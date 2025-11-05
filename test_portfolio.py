@@ -6,7 +6,7 @@ from stock import Stock
 from transaction import Transaction, TransactionType
 from portfolio import Portfolio
 from data_store import DataStore
-import os
+import tempfile
 import shutil
 
 
@@ -98,35 +98,39 @@ def test_data_store():
     """Test DataStore class."""
     print("\nTesting DataStore class...")
     
-    # Use a test directory
-    test_dir = "/tmp/test_portfolio_data"
-    if os.path.exists(test_dir):
+    # Use a test directory with tempfile
+    test_dir = tempfile.mkdtemp(prefix='test_portfolio_data_')
+    
+    try:
+        store = DataStore(test_dir)
+        
+        # Create and save portfolio
+        portfolio = Portfolio("Test Portfolio")
+        portfolio.add_transaction(Transaction("AAPL", TransactionType.BUY, 10, 150.00))
+        portfolio.add_stock(Stock("AAPL", "Apple Inc."))
+        
+        store.save_portfolio(portfolio)
+        assert store.portfolio_exists()
+        
+        # Load portfolio
+        loaded_portfolio = store.load_portfolio()
+        assert loaded_portfolio is not None
+        assert loaded_portfolio.name == "Test Portfolio"
+        assert len(loaded_portfolio.transactions) == 1
+        assert loaded_portfolio.transactions[0].ticker == "AAPL"
+        
+        # Test serialization integrity
+        holdings = loaded_portfolio.get_holdings()
+        assert "AAPL" in holdings
+        assert holdings["AAPL"].quantity == 10
+        
+        # Cleanup
         shutil.rmtree(test_dir)
-    
-    store = DataStore(test_dir)
-    
-    # Create and save portfolio
-    portfolio = Portfolio("Test Portfolio")
-    portfolio.add_transaction(Transaction("AAPL", TransactionType.BUY, 10, 150.00))
-    portfolio.add_stock(Stock("AAPL", "Apple Inc."))
-    
-    store.save_portfolio(portfolio)
-    assert store.portfolio_exists()
-    
-    # Load portfolio
-    loaded_portfolio = store.load_portfolio()
-    assert loaded_portfolio is not None
-    assert loaded_portfolio.name == "Test Portfolio"
-    assert len(loaded_portfolio.transactions) == 1
-    assert loaded_portfolio.transactions[0].ticker == "AAPL"
-    
-    # Test serialization integrity
-    holdings = loaded_portfolio.get_holdings()
-    assert "AAPL" in holdings
-    assert holdings["AAPL"].quantity == 10
-    
-    # Cleanup
-    shutil.rmtree(test_dir)
+    except Exception:
+        # Ensure cleanup on error
+        if test_dir:
+            shutil.rmtree(test_dir, ignore_errors=True)
+        raise
     
     print("✓ DataStore class tests passed")
 
@@ -135,48 +139,52 @@ def test_integration():
     """Test full integration scenario."""
     print("\nTesting full integration scenario...")
     
-    test_dir = "/tmp/test_portfolio_integration"
-    if os.path.exists(test_dir):
+    test_dir = tempfile.mkdtemp(prefix='test_portfolio_integration_')
+    
+    try:
+        store = DataStore(test_dir)
+        portfolio = Portfolio("Integration Test")
+        
+        # Simulate real trading scenario
+        # Day 1: Buy AAPL
+        portfolio.add_stock(Stock("AAPL", "Apple Inc."))
+        portfolio.add_transaction(Transaction("AAPL", TransactionType.BUY, 100, 150.00))
+        
+        # Day 2: Buy more AAPL at different price
+        portfolio.add_transaction(Transaction("AAPL", TransactionType.BUY, 50, 155.00))
+        
+        # Day 3: Buy MSFT
+        portfolio.add_stock(Stock("MSFT", "Microsoft"))
+        portfolio.add_transaction(Transaction("MSFT", TransactionType.BUY, 30, 350.00))
+        
+        # Day 4: Receive dividend
+        portfolio.add_transaction(Transaction("AAPL", TransactionType.DIVIDEND, 1, 75.00))
+        
+        # Day 5: Sell some AAPL
+        portfolio.add_transaction(Transaction("AAPL", TransactionType.SELL, 50, 160.00))
+        
+        # Save and reload
+        store.save_portfolio(portfolio)
+        loaded = store.load_portfolio()
+        
+        # Verify results
+        holdings = loaded.get_holdings()
+        assert len(holdings) == 2
+        assert holdings["AAPL"].quantity == 100  # 100 + 50 - 50
+        assert holdings["MSFT"].quantity == 30
+        
+        summary = loaded.get_portfolio_summary()
+        assert summary['total_holdings'] == 2
+        assert summary['dividend_income'] == 75.00
+        assert summary['realized_gains'] > 0  # We sold at profit
+        
+        # Cleanup
         shutil.rmtree(test_dir)
-    
-    store = DataStore(test_dir)
-    portfolio = Portfolio("Integration Test")
-    
-    # Simulate real trading scenario
-    # Day 1: Buy AAPL
-    portfolio.add_stock(Stock("AAPL", "Apple Inc."))
-    portfolio.add_transaction(Transaction("AAPL", TransactionType.BUY, 100, 150.00))
-    
-    # Day 2: Buy more AAPL at different price
-    portfolio.add_transaction(Transaction("AAPL", TransactionType.BUY, 50, 155.00))
-    
-    # Day 3: Buy MSFT
-    portfolio.add_stock(Stock("MSFT", "Microsoft"))
-    portfolio.add_transaction(Transaction("MSFT", TransactionType.BUY, 30, 350.00))
-    
-    # Day 4: Receive dividend
-    portfolio.add_transaction(Transaction("AAPL", TransactionType.DIVIDEND, 1, 75.00))
-    
-    # Day 5: Sell some AAPL
-    portfolio.add_transaction(Transaction("AAPL", TransactionType.SELL, 50, 160.00))
-    
-    # Save and reload
-    store.save_portfolio(portfolio)
-    loaded = store.load_portfolio()
-    
-    # Verify results
-    holdings = loaded.get_holdings()
-    assert len(holdings) == 2
-    assert holdings["AAPL"].quantity == 100  # 100 + 50 - 50
-    assert holdings["MSFT"].quantity == 30
-    
-    summary = loaded.get_portfolio_summary()
-    assert summary['total_holdings'] == 2
-    assert summary['dividend_income'] == 75.00
-    assert summary['realized_gains'] > 0  # We sold at profit
-    
-    # Cleanup
-    shutil.rmtree(test_dir)
+    except Exception:
+        # Ensure cleanup on error
+        if test_dir:
+            shutil.rmtree(test_dir, ignore_errors=True)
+        raise
     
     print("✓ Integration tests passed")
 

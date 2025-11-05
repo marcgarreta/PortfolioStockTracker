@@ -1,6 +1,5 @@
 """Stock class to represent individual stock information."""
 
-from datetime import datetime
 from typing import Optional
 
 

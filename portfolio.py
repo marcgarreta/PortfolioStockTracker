@@ -94,13 +94,13 @@ class Portfolio:
                 holdings_data[transaction.ticker]['quantity'] += transaction.quantity
                 holdings_data[transaction.ticker]['total_cost'] += transaction.total_value
             elif transaction.transaction_type == TransactionType.SELL:
+                # Calculate average cost before the sale
+                current_qty = holdings_data[transaction.ticker]['quantity']
+                if current_qty > 0:
+                    avg_cost = holdings_data[transaction.ticker]['total_cost'] / current_qty
+                    # Reduce cost basis proportionally
+                    holdings_data[transaction.ticker]['total_cost'] -= (avg_cost * transaction.quantity)
                 holdings_data[transaction.ticker]['quantity'] -= transaction.quantity
-                # For sells, we reduce the cost basis proportionally
-                if holdings_data[transaction.ticker]['quantity'] > 0:
-                    # Keep proportional cost basis
-                    pass
-                else:
-                    holdings_data[transaction.ticker]['total_cost'] = 0.0
         
         # Convert to Holding objects
         holdings = {}

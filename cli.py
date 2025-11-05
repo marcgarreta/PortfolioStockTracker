@@ -2,7 +2,7 @@
 
 import sys
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
 from stock import Stock
 from transaction import Transaction, TransactionType
 from portfolio import Portfolio
@@ -47,7 +47,7 @@ class PortfolioCLI:
         print("8. Exit")
         print("="*60)
     
-    def get_user_input(self, prompt: str, input_type=str, allow_empty=False) -> Optional[any]:
+    def get_user_input(self, prompt: str, input_type=str, allow_empty=False) -> Optional[Any]:
         """
         Get validated user input.
         
