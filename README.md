@@ -1,5 +1,7 @@
 # 📈 Portfolio Stock Tracker 
 
+This project is built using **Flask** (for the backend and web interface) and **Python** as the core programming language.   
+
 This project is currently under active development.  
 Updates will be made frequently as new features are implemented.
 
@@ -34,6 +36,28 @@ The goal of this project is to develop a **user interface** that allows users to
 | Implement data export (CSV/Excel) | ⬜ Pending |
 | Dockerize the application | ⬜ Pending |
 | Write documentation and usage guide | ⬜ Pending |
+
+---
+
+## ⚙️ How to Run the Application  
+
+Follow these steps to set up and run the app locally:
+
+```bash
+# 1️⃣ Create a virtual environment
+python -m venv venv
+
+# 2️⃣ Activate the environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
+
+# 3️⃣ Install dependencies
+pip install -r requirements.txt
+
+# 4️⃣ Run the app
+python app.py
 
 ---
 
