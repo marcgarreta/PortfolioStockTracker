@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Add investment</h2>
+<form method="post">
+    <label>Symbol (e.g. AAPL, TSLA, BTC-USD):</label><input type="text" name="symbol" required><br>
+    <label>Category:</label><input type="text" name="category" name="category"><br>
+    <label>Quantity:</label><input type="number" name="quantity" step="any" name="quantity"><br>
+    <label>Buy Price:</label><input type="number" name="buy_price" step="any" name="buy_price"><br>
+    <button type="submit">Add</button>
+</form>
+{% endblock %}

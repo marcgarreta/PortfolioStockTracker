@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Investment</h2>
+<form method="post">
+    <label>Quantity:</label><input type="number" name="quantity" step="any" value="{{ investment.quantity }}"><br>
+    <label>Buy Price:</label><input type="number" name="buy_price" step="any" value="{{ investment.buy_price }}"><br>
+    <button type="submit">Update</button>
+</form>
+{% endblock %}

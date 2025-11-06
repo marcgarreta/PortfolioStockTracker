@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Portfolio{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="header-row">
+    <h2>Portfolio Dashboard</h2>
+    <div class="small">Updated: {{ last_updated or "—" }}</div>
+  </div>
+
+  <div class="kv" style="gap:1.25rem; margin-bottom:1rem;">
+    <div class="card p-1" style="min-width:180px;">
+      <div class="small">Total Value</div>
+      <div><strong>{{ '%.2f' % total_value }}€</strong></div>
+    </div>
+    <div class="card p-1" style="min-width:180px;">
+      <div class="small">Total Cost</div>
+      <div><strong>{{ '%.2f' % total_cost }}€</strong></div>
+    </div>
+    <div class="card p-1" style="min-width:180px;">
+      <div class="small">Profit / Loss</div>
+      <div>
+        {% if profit_loss >= 0 %}
+          <strong class="success">{{ '%.2f' % profit_loss }}€</strong>
+        {% else %}
+          <strong class="error">{{ '%.2f' % profit_loss }}€</strong>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrap">              {# enables horizontal scroll on small screens #}
+    <table class="table positions-table">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Category</th>
+          <th class="right">Quantity</th>
+          <th class="right">Buy Price</th>
+          <th class="right">Live Price</th>
+          <th class="right">Value</th>
+          <th class="right">P / L</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for inv in investments %}
+        <tr>
+          <td><strong>{{ inv.symbol }}</strong></td>
+          <td class="small">{{ inv.category }}</td>
+          <td class="right">{{ inv.quantity }}</td>
+          <td class="right">{{ '%.2f' % inv.buy_price }}€</td>
+          <td class="right">{{ '%.2f' % inv.current_price }}€</td>
+          <td class="right">{{ '%.2f' % inv.value }}€</td>
+          <td class="right">
+            {% if inv.profit_loss >= 0 %}
+              <span class="success">{{ '%.2f' % inv.profit_loss }}€</span>
+            {% else %}
+              <span class="error">{{ '%.2f' % inv.profit_loss }}€</span>
+            {% endif %}
+          </td>
+          <td class="small">
+            <a href="{{ url_for('edit_investment', inv_id=inv.id) }}">Edit</a>
+            |
+            <a href="{{ url_for('delete_investment', inv_id=inv.id) }}" onclick="return confirm('Are you sure?');">Delete</a>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="8" class="small">No investments found. <a href="{{ url_for('add_investment') }}">Add one</a>.</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
