@@ -58,6 +58,7 @@ pip install -r requirements.txt
 
 # 4️⃣ Run the app
 python app.py
+```
 
 ---
 
