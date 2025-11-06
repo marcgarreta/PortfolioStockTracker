@@ -20,18 +20,20 @@ The goal of this project is to develop a **user interface** that allows users to
 ---
 
 ## ✅ Project Progress
-
 | Task | Status |
 |------|--------|
-| Initialize repository and environment setup | ✅ Completed |
-| Design basic Flask app structure | ✅ Completed |
-| Implement manual stock input (buy/sell transactions) | ⏳ In progress |
-| Add portfolio summary (total value, gain/loss) | ⏳ In progress |
-| Create data persistence (database or local storage) | ⬜ Pending |
-| Integrate basic charts and visualizations | ⬜ Pending |
+| Create Flask and Python environment setup | ✅ Completed |
+| Run base application with basic features | ✅ Completed |
+| Add Dashboard to add investments | ✅ Completed |
+| Add investment selling and transactions table | ⬜ Pending |
+| Add dividend tracking functionality | ⬜ Pending |
+| Implement portfolio performance calculations (ROI, P&L) | ⬜ Pending |
+| Add portfolio evolution charts | ⬜ Pending |
+| Integrate API for real-time stock prices | ✅ Completed |
+| Add filters and search in transactions | ⬜ Pending |
+| Implement data export (CSV/Excel) | ⬜ Pending |
 | Dockerize the application | ⬜ Pending |
 | Write documentation and usage guide | ⬜ Pending |
-| Final UI polish and testing | ⬜ Pending |
 
 ---
 
